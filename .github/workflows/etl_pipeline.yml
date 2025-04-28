@@ -10,7 +10,9 @@ jobs:
     name: Extract
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: Read Config
         run: |
           python -c "
@@ -20,29 +22,36 @@ jobs:
           print(f'DRIVE_FOLDER_ID={config['drive']['folder_id']}')
           print(f'KAGGLE_DATASET={config['kaggle']['dataset']}')
           " >> $GITHUB_ENV
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.8"
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install papermill pandas ipykernel
           python -m ipykernel install --user --name python3 --display-name "Python 3"
+
       - name: Run ETL Notebook
         run: |
           papermill notebooks/01_extract.ipynb output/01_extract_out.ipynb --kernel python
+
       - name: Upload raw data
         uses: actions/upload-artifact@v4
         with:
           name: raw_data
           path: data/raw_data.csv
+
       - name: Upload to Google Drive
         uses: willo32/google-drive-upload-action@v1
         with:
           target: data/raw_data.csv
           credentials: ${{ secrets.GDRIVE_SERVICE_ACCOUNT }}
           parent_folder_id: ${{ env.DRIVE_FOLDER_ID }}
+          child_folder: true
+          name: raw_data_$(date +'%Y%m%d').csv
 
   transform:
     name: Transform
@@ -54,18 +63,25 @@ jobs:
         with:
           name: raw_data
           path: data/
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.8"
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install papermill ipykernel
           python -m ipykernel install --user --name python3 --display-name "Python 3"
+
       - name: Run Transform Notebook
         run: |
           papermill notebooks/02_transform.ipynb output/02_transform_out.ipynb --kernel python
+
       - name: Upload clean data
         uses: actions/upload-artifact@v4
         with:
@@ -82,21 +98,24 @@ jobs:
         with:
           name: clean_data
           path: data/
+
       - name: Checkout repo
         uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.8"
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install papermill ipykernel great_expectations
-          python -m ipykernel install --user --name python3 --display-name "Python 3"
 
-      - name: Run Load Notebook
-        run: |
-          papermill notebooks/03_load.ipynb output/03_load_out.ipynb --kernel python
+      #- name: Set up Python
+      #  uses: actions/setup-python@v4
+      #  with:
+      #    python-version: "3.8"
+      #
+      #- name: Install dependencies
+      #  run: |
+      #    python -m pip install --upgrade pip
+      #    pip install papermill ipykernel great_expectations
+      #    python -m ipykernel install --user --name python3 --display-name "Python 3"
+      #
+      #- name: Run Load Notebook
+      #  run: |
+      #    papermill notebooks/03_load.ipynb output/03_load_out.ipynb --kernel python
 
       - name: Run Data Quality Checks
         run: |
@@ -121,5 +140,5 @@ jobs:
         with:
           title: "ETL Pipeline Failure"
           content-filepath: .github/ISSUE_TEMPLATE/etl_failure.md
-          labels: | 
+          labels: |
             ETL
