@@ -27,7 +27,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install papermill pandas
+          pip install papermill pandas ipykernel
+          python -m ipykernel install --user --name python3 --display-name "Python 3"
       - name: Run ETL Notebook
         run: |
           papermill notebooks/01_extract.ipynb output/01_extract_out.ipynb --kernel python
@@ -60,7 +61,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install papermill pandas
+          pip install papermill ipykernel
+          python -m ipykernel install --user --name python3 --display-name "Python 3"
       - name: Run Transform Notebook
         run: |
           papermill notebooks/02_transform.ipynb output/02_transform_out.ipynb --kernel python
@@ -89,7 +91,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install papermill PyDrive kaggle great_expectations
+          pip install papermill ipykernel great_expectations
+          python -m ipykernel install --user --name python3 --display-name "Python 3"
 
       - name: Run Load Notebook
         run: |
