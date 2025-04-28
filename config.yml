@@ -1,0 +1,6 @@
+drive:
+  folder_id: "1J-Il-mSrw08ie3BWVQMZYbLforl1UH-B"
+kaggle:
+  dataset: "tu_usuario/tu_dataset"
+pipeline:
+  schedule_cron: "0 6 * * *"

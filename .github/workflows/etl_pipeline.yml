@@ -1,0 +1,112 @@
+name: ETL Pipeline
+
+on:
+  schedule:
+    - cron: ${{ fromJson('{"cron":pipeline.schedule_cron}') }}
+  workflow_dispatch:
+
+jobs:
+  extract:
+    name: Extract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install papermill pandas
+      - name: Run ETL Notebook
+        run: |
+          papermill notebooks/01_extract.ipynb output/01_extract_out.ipynb
+      - name: Upload raw data
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw_data
+          path: data/raw_data.csv
+      - name: Upload to Google Drive
+        uses: willo32/google-drive-upload-action@v1
+        with:
+          target: data/clean_data.csv
+          credentials: ${{ secrets.GDRIVE_SERVICE_ACCOUNT }}
+          parent_folder_id: ${{ secrets.DRIVE_FOLDER_ID }}
+
+  transform:
+    name: Transform
+    needs: extract
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download raw data
+        uses: actions/download-artifact@v4
+        with:
+          name: raw_data
+          path: data/
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install papermill pandas
+      - name: Run Transform Notebook
+        run: |
+          papermill notebooks/02_transform.ipynb output/02_transform_out.ipynb
+      - name: Upload clean data
+        uses: actions/upload-artifact@v4
+        with:
+          name: clean_data
+          path: data/clean_data.csv
+
+  load:
+    name: Load
+    needs: transform
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download clean data
+        uses: actions/download-artifact@v4
+        with:
+          name: clean_data
+          path: data/
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install papermill PyDrive kaggle great_expectations
+
+      - name: Run Load Notebook
+        run: |
+          papermill notebooks/03_load.ipynb output/03_load_out.ipynb
+
+      - name: Run Data Quality Checks
+        run: |
+          great_expectations checkpoint run -n etl_checkpoint --fail-fast
+
+      - name: Push to Kaggle
+        uses: KaggleDatasets/push-kaggle-dataset@v1
+        with:
+          path: data/clean
+          dataset: ${{ kaggle.KAGGLE_DATASET }}
+          username: ${{ secrets.KAGGLE_USERNAME }}
+          key: ${{ secrets.KAGGLE_KEY }}
+
+    report:
+      name: Create Failure Issue
+      needs: [extract, transform, load]
+      if: ${{ failure() }}
+      runs-on: ubuntu-latest
+      steps:
+        - name: Open Issue on Failure
+          uses: benc-uk/create-issue-from-file@v2
+          with:
+            title: "ETL Pipeline Failure"
+            content-filepath: .github/ISSUE_TEMPLATE/etl_failure.md
+            author: github-actions
