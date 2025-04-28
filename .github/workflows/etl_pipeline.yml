@@ -14,12 +14,12 @@ jobs:
       - name: Read Config
         run: |
           python -c "
-import yaml
-with open('config.yml') as f:
-    config = yaml.safe_load(f)
-print(f'DRIVE_FOLDER_ID={config['drive']['folder_id']}')
-print(f'KAGGLE_DATASET={config['kaggle']['dataset']}')
-" >> $GITHUB_ENV
+          import yaml
+          with open('config.yml') as f:
+              config = yaml.safe_load(f)
+          print(f'DRIVE_FOLDER_ID={config['drive']['folder_id']}')
+          print(f'KAGGLE_DATASET={config['kaggle']['dataset']}')
+          " >> $GITHUB_ENV
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
