@@ -107,15 +107,15 @@ jobs:
           username: ${{ secrets.KAGGLE_USERNAME }}
           key: ${{ secrets.KAGGLE_KEY }}
 
-    report:
-      name: Create Failure Issue
-      needs: [extract, transform, load]
-      if: ${{ failure() }}
-      runs-on: ubuntu-latest
-      steps:
-        - name: Open Issue on Failure
-          uses: benc-uk/create-issue-from-file@v2
-          with:
-            title: "ETL Pipeline Failure"
-            content-filepath: .github/ISSUE_TEMPLATE/etl_failure.md
-            author: github-actions
+  report:
+    name: Create Failure Issue
+    needs: [extract, transform, load]
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open Issue on Failure
+        uses: benc-uk/create-issue-from-file@v2
+        with:
+          title: "ETL Pipeline Failure"
+          content-filepath: .github/ISSUE_TEMPLATE/etl_failure.md
+          author: github-actions
