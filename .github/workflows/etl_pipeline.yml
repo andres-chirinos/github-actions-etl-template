@@ -63,14 +63,14 @@ jobs:
     needs: extract
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: Download raw data
         uses: actions/download-artifact@v4
         with:
           name: raw_data
-          path: data/
-
-      - name: Checkout repo
-        uses: actions/checkout@v4
+          path: ./data/
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -91,7 +91,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: clean_data
-          path: data/clean_data.csv
+          path: ./data/clean_data.csv
 
   load:
     name: Load
@@ -102,7 +102,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: clean_data
-          path: data/
+          path: ./data/
 
       - name: Checkout repo
         uses: actions/checkout@v4
