@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: "0 6 * * *"
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   extract:
@@ -44,7 +47,7 @@ jobs:
       - name: Upload raw data
         uses: actions/upload-artifact@v4
         with:
-          name: raw_data.csv
+          name: raw_data
           path: data/raw_data.csv
 
       - name: Upload to Google Drive
@@ -63,7 +66,7 @@ jobs:
       - name: Download raw data
         uses: actions/download-artifact@v4
         with:
-          name: raw_data.csv
+          name: raw_data
           path: data/
 
       - name: Checkout repo
@@ -87,7 +90,7 @@ jobs:
       - name: Upload clean data
         uses: actions/upload-artifact@v4
         with:
-          name: clean_data.csv
+          name: clean_data
           path: data/clean_data.csv
 
   load:
@@ -98,7 +101,7 @@ jobs:
       - name: Download clean data
         uses: actions/download-artifact@v4
         with:
-          name: clean_data.csv
+          name: clean_data
           path: data/
 
       - name: Checkout repo
@@ -124,12 +127,14 @@ jobs:
           great_expectations checkpoint run -n etl_checkpoint --fail-fast
 
       - name: Push to Kaggle
-        uses: KaggleDatasets/push-kaggle-dataset@v1
+        uses: jaimevalero/push-kaggle-dataset@v3.2
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
         with:
-          path: data/clean
-          dataset: ${{ env.KAGGLE_DATASET }}
-          username: ${{ secrets.KAGGLE_USERNAME }}
-          key: ${{ secrets.KAGGLE_KEY }}
+          id: ${{ env.KAGGLE_DATASET }}
+          files: |
+            data/clean_data.csv
 
   report:
     name: Create Failure Issue
