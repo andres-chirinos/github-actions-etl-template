@@ -131,6 +131,10 @@ jobs:
         env:
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
           KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        with:
+          files: |
+            *.csv
+            *.parquet
 
   report:
     name: Create Failure Issue
@@ -142,5 +146,6 @@ jobs:
         uses: peter-evans/create-issue-from-file@v5
         with:
           title: "ETL Pipeline Failure"
-          content-filepath: https://raw.githubusercontent.com/andres-chirinos/github_actions_etl_template/refs/heads/main/.github/ISSUE_TEMPLATE/etl_failure.md
+          content-filepath:
+            https://raw.githubusercontent.com/andres-chirinos/github_actions_etl_template/refs/heads/main/.github/ISSUE_TEMPLATE/etl_failure.md
             ETL
