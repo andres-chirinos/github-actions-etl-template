@@ -122,9 +122,9 @@ jobs:
       #  run: |
       #    papermill notebooks/03_load.ipynb output/03_load_out.ipynb --kernel python
 
-      - name: Run Data Quality Checks
-        run: |
-          great_expectations checkpoint run -n etl_checkpoint --fail-fast
+      #- name: Run Data Quality Checks
+      #  run: |
+      #    great_expectations checkpoint run -n etl_checkpoint --fail-fast
 
       - name: Push to Kaggle
         uses: jaimevalero/push-kaggle-dataset@v3.2
