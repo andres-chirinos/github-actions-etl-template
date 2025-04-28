@@ -2,7 +2,7 @@ name: ETL Pipeline
 
 on:
   schedule:
-    - cron: ${{ fromJson('{"cron":pipeline.schedule_cron}') }}
+    - cron: ${{ fromJson(needs.config.pipeline.schedule_cron) }}
   workflow_dispatch:
 
 jobs:
