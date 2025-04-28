@@ -30,7 +30,7 @@ jobs:
           pip install papermill pandas
       - name: Run ETL Notebook
         run: |
-          papermill notebooks/01_extract.ipynb output/01_extract_out.ipynb --kernel python3
+          papermill notebooks/01_extract.ipynb output/01_extract_out.ipynb --kernel python
       - name: Upload raw data
         uses: actions/upload-artifact@v4
         with:
@@ -63,7 +63,7 @@ jobs:
           pip install papermill pandas
       - name: Run Transform Notebook
         run: |
-          papermill notebooks/02_transform.ipynb output/02_transform_out.ipynb
+          papermill notebooks/02_transform.ipynb output/02_transform_out.ipynb --kernel python
       - name: Upload clean data
         uses: actions/upload-artifact@v4
         with:
@@ -93,7 +93,7 @@ jobs:
 
       - name: Run Load Notebook
         run: |
-          papermill notebooks/03_load.ipynb output/03_load_out.ipynb
+          papermill notebooks/03_load.ipynb output/03_load_out.ipynb --kernel python
 
       - name: Run Data Quality Checks
         run: |
