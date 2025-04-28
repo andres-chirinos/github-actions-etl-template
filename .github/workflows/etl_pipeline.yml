@@ -40,7 +40,7 @@ jobs:
       - name: Upload to Google Drive
         uses: willo32/google-drive-upload-action@v1
         with:
-          target: data/clean_data.csv
+          target: data/raw_data.csv
           credentials: ${{ secrets.GDRIVE_SERVICE_ACCOUNT }}
           parent_folder_id: ${{ env.DRIVE_FOLDER_ID }}
 
