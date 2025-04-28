@@ -131,10 +131,6 @@ jobs:
         env:
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
           KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
-        with:
-          id: ${{ env.KAGGLE_DATASET }}
-          files: |
-            data/clean_data.csv
 
   report:
     name: Create Failure Issue
