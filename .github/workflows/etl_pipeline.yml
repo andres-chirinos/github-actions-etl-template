@@ -23,6 +23,9 @@ jobs:
           print(f'KAGGLE_DATASET={config['kaggle']['dataset']}')
           " >> $GITHUB_ENV
 
+      - name: Set Date Variable
+        run: echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -50,7 +53,7 @@ jobs:
           target: data/raw_data.csv
           credentials: ${{ secrets.GDRIVE_SERVICE_ACCOUNT }}
           parent_folder_id: ${{ env.DRIVE_FOLDER_ID }}
-          name: raw_data_${{ (date +'%Y%m%d') }}.csv
+          name: raw_data_${{ env.DATE }}.csv
 
   transform:
     name: Transform
