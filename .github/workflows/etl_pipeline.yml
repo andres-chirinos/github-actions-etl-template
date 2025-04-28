@@ -44,7 +44,7 @@ jobs:
       - name: Upload raw data
         uses: actions/upload-artifact@v4
         with:
-          name: raw_data
+          name: raw_data.csv
           path: data/raw_data.csv
 
       - name: Upload to Google Drive
@@ -87,7 +87,7 @@ jobs:
       - name: Upload clean data
         uses: actions/upload-artifact@v4
         with:
-          name: clean_data
+          name: clean_data.csv
           path: data/clean_data.csv
 
   load:
@@ -98,7 +98,7 @@ jobs:
       - name: Download clean data
         uses: actions/download-artifact@v4
         with:
-          name: clean_data
+          name: clean_data.csv
           path: data/
 
       - name: Checkout repo
