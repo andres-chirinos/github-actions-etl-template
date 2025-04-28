@@ -47,16 +47,16 @@ jobs:
       - name: Upload raw data
         uses: actions/upload-artifact@v4
         with:
-          name: raw_data
-          path: data/raw_data.csv
+          name: raw-data
+          path: data/raw-data.csv
 
       - name: Upload to Google Drive
         uses: willo32/google-drive-upload-action@v1
         with:
-          target: data/raw_data.csv
+          target: data/raw-data.csv
           credentials: ${{ secrets.GDRIVE_SERVICE_ACCOUNT }}
           parent_folder_id: ${{ env.DRIVE_FOLDER_ID }}
-          name: raw_data_${{ env.DATE }}.csv
+          name: raw-data_${{ env.DATE }}.csv
 
   transform:
     name: Transform
@@ -69,7 +69,7 @@ jobs:
       - name: Download raw data
         uses: actions/download-artifact@v4
         with:
-          name: raw_data
+          name: raw-data
           path: ./data/
 
       - name: Set up Python
@@ -90,8 +90,8 @@ jobs:
       - name: Upload clean data
         uses: actions/upload-artifact@v4
         with:
-          name: clean_data
-          path: ./data/clean_data.csv
+          name: clean-data
+          path: ./data/clean-data.csv
 
   load:
     name: Load
@@ -104,7 +104,7 @@ jobs:
       - name: Download clean data
         uses: actions/download-artifact@v4
         with:
-          name: clean_data
+          name: clean-data
           path: ./data/
 
       #- name: Set up Python
