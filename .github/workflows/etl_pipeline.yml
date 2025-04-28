@@ -98,26 +98,26 @@ jobs:
     needs: transform
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: Download clean data
         uses: actions/download-artifact@v4
         with:
           name: clean_data
           path: ./data/
 
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
 
-      #- name: Set up Python
-      #  uses: actions/setup-python@v4
-      #  with:
-      #    python-version: "3.8"
-      #
-      #- name: Install dependencies
-      #  run: |
-      #    python -m pip install --upgrade pip
-      #    pip install papermill ipykernel great_expectations
-      #    python -m ipykernel install --user --name python3 --display-name "Python 3"
-      #
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install papermill ipykernel great_expectations
+          python -m ipykernel install --user --name python3 --display-name "Python 3"
+
       #- name: Run Load Notebook
       #  run: |
       #    papermill notebooks/03_load.ipynb output/03_load_out.ipynb --kernel python
