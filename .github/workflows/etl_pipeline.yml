@@ -2,7 +2,7 @@ name: ETL Pipeline
 
 on:
   schedule:
-    - cron: ${{ fromJson(needs.config.pipeline.schedule_cron) }}
+    - cron: "0 6 * * *"
   workflow_dispatch:
 
 jobs:
@@ -11,6 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Read Config
+        run: |
+          python -c "
+import yaml
+with open('config.yml') as f:
+    config = yaml.safe_load(f)
+print(f'DRIVE_FOLDER_ID={config['drive']['folder_id']}')
+print(f'KAGGLE_DATASET={config['kaggle']['dataset']}')
+" >> $GITHUB_ENV
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -32,7 +41,7 @@ jobs:
         with:
           target: data/clean_data.csv
           credentials: ${{ secrets.GDRIVE_SERVICE_ACCOUNT }}
-          parent_folder_id: ${{ secrets.DRIVE_FOLDER_ID }}
+          parent_folder_id: ${{ env.DRIVE_FOLDER_ID }}
 
   transform:
     name: Transform
@@ -94,7 +103,7 @@ jobs:
         uses: KaggleDatasets/push-kaggle-dataset@v1
         with:
           path: data/clean
-          dataset: ${{ kaggle.KAGGLE_DATASET }}
+          dataset: ${{ env.KAGGLE_DATASET }}
           username: ${{ secrets.KAGGLE_USERNAME }}
           key: ${{ secrets.KAGGLE_KEY }}
 
