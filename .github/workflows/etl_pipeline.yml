@@ -142,6 +142,5 @@ jobs:
         uses: peter-evans/create-issue-from-file@v5
         with:
           title: "ETL Pipeline Failure"
-          content-filepath: .github/ISSUE_TEMPLATE/etl_failure.md
-          labels: |
+          content-filepath: https://raw.githubusercontent.com/andres-chirinos/github_actions_etl_template/refs/heads/main/.github/ISSUE_TEMPLATE/etl_failure.md
             ETL
