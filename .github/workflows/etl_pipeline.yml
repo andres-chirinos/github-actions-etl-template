@@ -21,6 +21,7 @@ jobs:
           python -c """
           import yaml, datetime
 
+          # Config variables
           def flatten_config(prefix, config):
             for key, value in config.items():
               if isinstance(value, dict):
@@ -33,7 +34,9 @@ jobs:
 
           flatten_config('', config)
 
-          print(f"TIMESTAMP={datetime.datetime.now().strftime('%Y%m%d%H%M%S')}")
+          # Runtime variables
+          timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+          print(f'TIMESTAMP={timestamp}')
           """ >> $GITHUB_ENV
 
       - name: Set up Python
