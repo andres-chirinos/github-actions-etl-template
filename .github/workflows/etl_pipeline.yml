@@ -175,7 +175,7 @@ jobs:
           id: ${{ env.KAGGLE_DATASET_ID }}
           title: ${{ env.PROJECT_NAME }}
           description: ${{ env.DESCRIPTION }}
-          is_public: ${{ env.IS_PUBLIC }}
+          is_public: ${{ env.KAGGLE_IS_PUBLIC }}
           files: |
             "./data/*.csv"
             "./data/*.parquet"
