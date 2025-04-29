@@ -18,7 +18,7 @@ jobs:
 
       - name: Read Config
         run: |
-          python -c "
+          python -c """
           import yaml, datetime
 
           def flatten_config(prefix, config):
@@ -33,8 +33,8 @@ jobs:
 
           flatten_config('', config)
 
-          print(f'TIMESTAMP={datetime.datetime.now().strftime("%Y%m%d%H%M%S")}')
-          " >> $GITHUB_ENV
+          print(f"TIMESTAMP={datetime.datetime.now().strftime('%Y%m%d%H%M%S')}")
+          """ >> $GITHUB_ENV
 
       - name: Set up Python
         uses: actions/setup-python@v4
