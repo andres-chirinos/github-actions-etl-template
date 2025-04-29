@@ -19,7 +19,7 @@ jobs:
       - name: Read Config
         run: |
           python -c "
-          import yaml
+          import yaml, datetime
 
           def flatten_config(prefix, config):
             for key, value in config.items():
@@ -187,4 +187,3 @@ jobs:
           title: "ETL Pipeline Failure"
           content-filepath:
             https://raw.githubusercontent.com/andres-chirinos/github_actions_etl_template/refs/heads/main/.github/ISSUE_TEMPLATE/etl_failure.md
-            ETL
