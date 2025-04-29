@@ -176,7 +176,9 @@ jobs:
           title: ${{ env.PROJECT_NAME }}
           description: ${{ env.DESCRIPTION }}
           is_public: ${{ env.IS_PUBLIC }}
-          files: ${{ env.KAGGLE_FILES }}
+          files: |
+            "./data/*.csv"
+            "./data/*.parquet"
 
   report:
     name: Create Failure Issue
@@ -188,5 +190,4 @@ jobs:
         uses: peter-evans/create-issue-from-file@v5
         with:
           title: "ETL Pipeline Failure"
-          content-filepath:
-            https://raw.githubusercontent.com/andres-chirinos/github_actions_etl_template/refs/heads/main/.github/ISSUE_TEMPLATE/etl_failure.md
+          content-filepath: https://raw.githubusercontent.com/andres-chirinos/github_actions_etl_template/refs/heads/main/.github/ISSUE_TEMPLATE/etl_failure.md

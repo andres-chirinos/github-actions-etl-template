@@ -17,6 +17,3 @@ drive:
 kaggle:
   dataset_id: "andreschirinos/github-actions-etl-template"
   is_public: true
-  files: |
-    "data/*.csv"
-    "data/*.parquet"
