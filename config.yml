@@ -4,10 +4,13 @@ author: Andres Chirinos
 created_date: 2025-04-28
 version: 1.0.0
 
+output_dir: output
+data_dir: data
+
 github_actions:
   artifact:
     logs:
-      retention_days: 14
+      retention_days: 7
     data:
       retention_days: 14
 
